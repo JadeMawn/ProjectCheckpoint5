@@ -29,6 +29,9 @@ _syscallStart_:
 #Do init stuff
 _syscall0:
     addi $sp, $sp, -4096
+    la $k1, _END_OF_STATIC_MEMORY_          # Get the location out of static memory into k1
+    sw $k1, -1024($t0)                      # Use 0xFFFFFEFC to store heap pointer
+
     # Initialization goes here
     j _syscallEnd_
 
@@ -126,6 +129,12 @@ _syscall5:
 #Heap allocation
 _syscall9:
     # Heap allocation code goes here
+    lw $t0, -1024($t0)                      # Get heap pointer from 0xFFFFFEFC
+    
+    add $v0, $0, $t0                        # to return: The address of the requested heap
+    add $t0, $a0, $t0
+    sw $t0, -1024($t0)
+
     jr $k0
 
 
