@@ -36,7 +36,7 @@ _syscall0:
 _syscall1:
     beq $a0, $0, _iszero
 
-    addi $sp, $sp, -36       # Allocate space for 10 registers
+    addi $sp, $sp, -36       # Allocate space for 9 registers
     sw $ra, 0($sp)           # Save return registers
     sw $a0, 4($sp)            
     sw $t0, 8($sp)           
@@ -92,56 +92,60 @@ _skip:
     mflo $t6               # Update divisor
     bne $t6, $0, _nextdigit  # Continue if divisor > 0
 
-    lw $t6, 32($sp)          # Restore $t6
-    lw $t5, 28($sp)          # Restore $t5
-    lw $t4, 24($sp)          # Restore $t4
-    lw $t3, 20($sp)          # Restore $t3
-    lw $t2, 16($sp)          # Restore $t2
-    lw $t1, 12($sp)          # Restore $t1
-    lw $t0, 8($sp)           # Restore $t0
-    lw $a0, 4($sp)           # Restore $a0
-    lw $ra, 0($sp)           # Restore return address
+    lw $t6, 32($sp)          # Restore addresses
+    lw $t5, 28($sp)          
+    lw $t4, 24($sp)          
+    lw $t3, 20($sp)          
+    lw $t2, 16($sp)          
+    lw $t1, 12($sp)          
+    lw $t0, 8($sp)           
+    lw $a0, 4($sp)          
+    lw $ra, 0($sp)           
     addi $sp, $sp, 36        # Deallocate stack space
     j _end
 
 _iszero:
-    addi $t0, $0, 0    # ASCII code for '-'
+    addi $t0, $0, 48    # ASCII code for '0'
     sw $t0, -256($0)    # Print digit
 
 _end:
     jr $k0                 # Return to caller
 
 
+
+
+
 #Read Integer
 _syscall5:
     # Read Integer code goes here
 
+    
     jr $k0
+
 
 #Heap allocation
 _syscall9:
     # Heap allocation code goes here
     jr $k0
 
+
 #"End" the program
 _syscall10:
     j _syscall10
 
-#print character
-_syscall11:
-    lw $t0, 0($a0)            # Load character from $a0
 
-    sw $t0, -256($0) 
-    
+#print character 
+_syscall11:
+    sw $a0, -256($0) 
     jr $k0
+
 
 #read character
 _syscall12:
-    # read character code goes here
-    lw $t0, -240($0) #0xFFFFFF10 = keyboard ready
-    beq $t0, $0, _syscall12 #if no keypress loop until keypress 
+    lw $t0, -240($0)         #0xFFFFFF10 = keyboard ready
+    beq $t0, $0, _syscall12     #if no keypress loop until keypress 
 
-    lw $v0, -236($0) #0xFFFFFF14 = read keyboard character into $v0
+    lw $v0, -236($0)         #0xFFFFFF14 = read keyboard character into $v0
 
     jr $k0
 
