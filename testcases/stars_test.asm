@@ -1,6 +1,6 @@
 addi $a1, $0, 60    # 60 freq
 addi $a0, $0, 10    # 10 for Volume
-addi $v0, $0, 15    # 9 for 
+addi $v0, $0, 15    # 15 for buzzer
 syscall
 
 add $a0, $v0, 15    # colors
