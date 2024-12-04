@@ -129,8 +129,102 @@ _end:
 #Read Integer
 _syscall5:
     # Read Integer code goes here
+    # t0 is our bool for if the number is negative
+    # v0 is our ongoing sum
+    # t2 is the character in keyboard
+    # t1 is 
 
+    add $t0, $0, $0             # t0 = 0 because not negative
+    add $v0, $0, $0             # This will be our ongoing total
+
+    _first:
+    lw $t5, -240($0)            # 0xFFFFFF10 = keyboard ready
+    beq $t5, $0, _first         # if no keypress loop until keypress 
+    lw $t2, -236($0)            # 0xFFFFFF14 = read keyboard character into $t2
+
+    addi $t1, $0, 45            # Load ASCII value of negative ('-') into $t1, if the character is a minus ('-'), set t0 flag to 1
+    bne $t2, $t1, _check0       # If $t2 isn't negative, then check if its 0
+    addi $t0, $0, 1             # If $t2 is '-', then set t0 flag to 1
+    sw $t0, -240($0)            # sw 0xFFFFFF10 = increment to next key as we only do mult when an int is found
+    j _read                     # if $t2 is '-', then read next char
+
+    _read: 
+    lw $t5, -240($0)            # 0xFFFFFF10 = keyboard ready
+    beq $t5, $0, _read          # if no keypress loop until keypress 
+    lw $t2, -236($0)            # 0xFFFFFF14 = read keyboard character into $t2
+
+    _check0:
+    addi $t1, $0, 48            # Load ASCII value of 0 ('0') into $t1, if the character is 0 ('0'), add that as the next num
+    bne $t2, $t1, _check1       # If $t2 isn't '0', then check if its '1'
+    addi $t3, $0, 0             # If $t2 is '0', then mark that as next var
+    j _mult
+
+    _check1:
+    addi $t1, $0, 49            # Load ASCII value of 1 ('1') into $t1, if the character is 1 ('1'), add that as the next num
+    bne $t2, $t1, _check2       # If $t2 isn't '1', then check if its '2'
+    addi $t3, $0, 1             # If $t2 is '1', then mark that as next var
+    j _mult
+
+    _check2:
+    addi $t1, $0, 50            # Load ASCII value of 2 ('2') into $t2, if the character is 2 ('2'), add that as the next num
+    bne $t2, $t1, _check3       # If $t2 isn't '2', then check if its '3'
+    addi $t3, $0, 2             # If $t2 is '2', then mark that as next var
+    j _mult
+
+    _check3:
+    addi $t1, $0, 51            # Load ASCII value of 3 ('3') into $t2, if the character is 3 ('3'), add that as the next num
+    bne $t2, $t1, _check4       # If $t2 isn't '3', then check if its '4'
+    addi $t3, $0, 3             # If $t2 is '3', then mark that as next var
+    j _mult
+
+    _check4:
+    addi $t1, $0, 52            # Load ASCII value of 4 ('4') into $t2, if the character is 4 ('4'), add that as the next num
+    bne $t2, $t1, _check5       # If $t2 isn't '4', then check if its '5'
+    addi $t3, $0, 4             # If $t2 is '4', then mark that as next var
+    j _mult
+
+    _check5:
+    addi $t1, $0, 53            # Load ASCII value of 5 ('5') into $t2, if the character is 5 ('5'), add that as the next num
+    bne $t2, $t1, _check6       # If $t2 isn't '5', then check if its '6'
+    addi $t3, $0, 5             # If $t2 is '5', then mark that as next var
+    j _mult
+
+    _check6:
+    addi $t1, $0, 54            # Load ASCII value of 6 ('6') into $t2, if the character is 6 ('6'), add that as the next num
+    bne $t2, $t1, _check7       # If $t2 isn't '6', then check if its '7'
+    addi $t3, $0, 6             # If $t2 is '6', then mark that as next var
+    j _mult
     
+    _check7:
+    addi $t1, $0, 55            # Load ASCII value of 7 ('7') into $t2, if the character is 7 ('7'), add that as the next num
+    bne $t2, $t1, _check8       # If $t2 isn't '7', then check if its '8'
+    addi $t3, $0, 7             # If $t2 is '7', then mark that as next var
+    j _mult
+
+    _check8:
+    addi $t1, $0, 56            # Load ASCII value of 8 ('8') into $t2, if the character is 8 ('8'), add that as the next num
+    bne $t2, $t1, _check9       # If $t2 isn't '8', then check if its '9'
+    addi $t3, $0, 8             # If $t2 is '8', then mark that as next var
+    j _mult
+
+    _check9:
+    addi $t1, $0, 57            # Load ASCII value of 9 ('9') into $t2, if the character is 9 ('9'), add that as the next num
+    bne $t2, $t1, _int_end      # If $t2 isn't '9', then it isnt an integer
+    addi $t3, $0, 9             # If $t2 is '9', then mark that as next var
+
+    _mult:
+    sw $t0, -240($0)            # sw 0xFFFFFF10 = increment to next key as we only do mult when an int is found
+    addi $t4, $0, 10            # Load 10 into $k1
+    mult $v0, $t4               # Multiply $v1 by 10
+    mflo $v0                    # Move the result from LO to $v0
+    add $v0, $v0, $t3           # add the next digit to $v0
+    j _read                     # Read the next
+
+    _int_end:
+    beq $t0, $0, _nonnegative
+    sub $v0, $0, $v0
+
+    _nonnegative:
     jr $k0
 
 
