@@ -21,6 +21,14 @@ _syscallStart_:
     beq $v0, $k1, _syscall11 #jump to syscall 11
     addi $k1, $0, 12
     beq $v0, $k1, _syscall12 #jump to syscall 12
+    addi $k1, $0, 15
+    beq $v0, $k1, _syscall15 #jump to syscall 15 THIS IS THE BUZZER
+    addi $k1, $0, 16
+    beq $v0, $k1, _syscall16 #jump to syscall 16 THIS IS X FOR JOYSTICK
+    addi $k1, $0, 17
+    beq $v0, $k1, _syscall17 #jump to syscall 17 THIS IS Y FOR JOYSTICK
+    addi $k1, $0, 18
+    beq $v0, $k1, _syscall18 #jump to syscall 18 THIS IS FOR LED CONTROL
     # Add branches to any syscalls required for your stars.
 
     #Error state - this should never happen - treat it like an end program
@@ -156,6 +164,29 @@ _syscall12:
 
     lw $v0, -236($0)         #0xFFFFFF14 = read keyboard character into $v0
 
+    jr $k0
+
+#play buzzer
+_syscall15:
+    sw $a0, -200($0)         #0xFFFFFF38 = Set Volume
+    sw $a1, -204($0)         #0xFFFFFF34 = Set Frequency
+    addi $t0, $0, 1
+    sw $t0, -208($0)         #0xFFFFFF30 = Play Noise
+    jr $k0
+
+#read X from Joystick
+_syscall16:
+    lw $v0, -196($0)         #0xFFFFFF3C = read X
+    jr $k0
+
+#read Y from Joystick
+_syscall17:
+    lw $v0, -192($0)         #0xFFFFFF40 = read Y
+    jr $k0
+
+#LED Control
+_syscall18:
+    sw $a0, -188($0)         #0xFFFFFF44 = display   
     jr $k0
 
 #extra challenge syscalls go here?
