@@ -1,4 +1,7 @@
-
+# sw $s0, -224($0) #0xFFFFFF20 = set x coordinate
+# sw $s1, -220($0) #0xFFFFFF24 = set y coordinate
+# sw $t0, -216($0) #0xFFFFFF28 = set color
+# sw $0, -212($0)  #0xFFFFFF2C = write pixel
 
 create_design:
     # Set s6 to white that we will use for walls.
@@ -86,11 +89,6 @@ create_design:
         j start_b_horizontal
 
     end_b_horizontal:
-
-    sw $s0, -224($0) #0xFFFFFF20 = monitor x coordinate
-    sw $s1, -220($0) #0xFFFFFF24 = monitor y coordinate
-    sw $t0, -216($0) #0xFFFFFF28 = monitor color
-    sw $0, -212($0)  #0xFFFFFF2C = write pixel
 
 
 move_p1_up:
