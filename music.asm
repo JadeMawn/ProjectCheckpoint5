@@ -1,6 +1,6 @@
 .data
-    notes: .word 220 247 294 294 330 349 440 494 523 587 659 587 523 494 220 294 440 220
-    volume: .word 5 5 6 7 8 10 10 4 6 10 9 8 6 4 7 8 9 10
+    notes: .word 330 0 294 0 261 0 294 0 330 0 330 0 330 0 294 0 294 0 294 0 330 0 392 0 392 0 330 0 294 0 261 0 294 0 330 0 330 0 330 0 294 0 294 0 294 0 330 0 294 0 261 0
+    volume: .word 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6 6
 .text
 .globl main
 
@@ -20,6 +20,7 @@
 # 
     la $s0, notes
     la $s1, volume
+    addi $a2, $0, 0
 main: 
     lw $a1, 0($s0)
     lw $a0, 0($s1)
@@ -27,13 +28,11 @@ main:
     addi $s0, $s0, 4
     addi $s1, $s1, 4
 
-    addi $v0, $0, 13  
+    addi $v0, $0, 15    #set
     syscall
 
-    addi $t0, $0, 100
-    addi $t1, $0, 0
-delay:
-    addi $t0, $t0, -1
-    bne $t0, $t1 delay
+    addi $a1, $0, 1
+    addi $v0, $0, 14    #play
+    syscall
 
     j main

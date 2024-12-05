@@ -21,12 +21,10 @@ _syscallStart_:
     beq $v0, $k1, _syscall11 #jump to syscall 11
     addi $k1, $0, 12
     beq $v0, $k1, _syscall12 #jump to syscall 12
-    addi $k1, $0, 13
-    beq $v0, $k1, _syscall13 #jump to syscall 13 THIS IS THE BUZZER3
     addi $k1, $0, 14
-    beq $v0, $k1, _syscall14 #jump to syscall 14 THIS IS THE BUZZER2
+    beq $v0, $k1, _syscall14 #jump to syscall 15 PLAY SPEAKER
     addi $k1, $0, 15
-    beq $v0, $k1, _syscall15 #jump to syscall 15 THIS IS THE BUZZER
+    beq $v0, $k1, _syscall15 #jump to syscall 15 SET SPEAKER
     addi $k1, $0, 16
     beq $v0, $k1, _syscall16 #jump to syscall 16 THIS IS X FOR JOYSTICK
     addi $k1, $0, 17
@@ -264,28 +262,16 @@ _syscall12:
 
     jr $k0
 
-#play buzzer3
-_syscall13:
-    sw $a0, -232($0)         #0xFFFFFF18 = Set Volume
-    sw $a1, -236($0)         #0xFFFFFF14 = Set Frequency
-    addi $t0, $0, 1
-    sw $t0, -240($0)         #0xFFFFFF10 = Play Noise
-    jr $k0
-
-#play buzzer2
+#set buzzer
 _syscall14:
-    sw $a0, -216($0)         #0xFFFFFF28 = Set Volume
-    sw $a1, -220($0)         #0xFFFFFF24 = Set Frequency
-    addi $t0, $0, 1
-    sw $t0, -224($0)         #0xFFFFFF20 = Play Noise
+    sw $a0, -208($0)         #0xFFFFFF30 = Play Noise
     jr $k0
 
-#play buzzer
+#set buzzer
 _syscall15:
     sw $a0, -200($0)         #0xFFFFFF38 = Set Volume
     sw $a1, -204($0)         #0xFFFFFF34 = Set Frequency
-    addi $t0, $0, 1
-    sw $t0, -208($0)         #0xFFFFFF30 = Play Noise
+    sw $a2, -212($0)         #0xFFFFFF2C = Choose Buzzer
     jr $k0
 
 #read X from Joystick
